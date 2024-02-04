@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.domain.post.PostMapper">
+
+    <!-- tb_post 테이블 전체 컬럼 -->
+    <sql id="postColumns">
+        id
+        , title
+        , content
+        , writer
+        , view_cnt
+        , notice_yn
+        , delete_yn
+        , created_date
+        , modified_date
+    </sql>
+
+    <!-- 게시글 저장 -->
+    <insert id="save" parameterType="com.study.domain.post.PostRequest">
+        insert into tb_post (
+            <include refid="postColumns" />
+        ) values (
+              #{id}
+            , #{title}
+            , #{content}
+            , #{writer}
+            , 0
+            , #{noticeYn}
+            , false
+            , now()
+            , null
+        )
+    </insert>
+
+    <!-- 게시글 상세 정보 조회 -->
+    <select id="findById" parameterType="Long" resultType="com.study.domain.post.PostResponse">
+        select 
+            <include refid="postColumns" />
+        from 
+            tb_post
+        where 
+            id = #{id};
+    </select>
+
+    
+    <!-- 게시글 수정 -->
+    <update id="update" parameterType="com.study.domain.post.PostRequest">
+        update tb_post
+        set
+              title = #{title}
+            , content = #{content}
+            , writer = #{writer}
+            , notice_yn = #{noticeYn}
+            , modified_date = now()
+        where
+            id = #{id}
+    </update>
+    
+    
+    <!-- 게시글 삭제 -->
+    <update id="deleteById" parameterType="Long">
+        update tb_post
+        set
+            delete_yn = 1;
+        where id = #{id}
+    </update>
+
+
+    <!-- 게시글 목록 조회 -->
+    <select id="findAll" resultType="com.study.domain.post.PostResponse">
+        select
+            <include refid="postColumns" />
+        from
+            tb_post
+        where
+            delete_yn = 0
+        order by
+            id desc;
+    </select>
+
+    <!-- 게시글 수 조회 -->
+
+</mapper>
