@@ -17,7 +17,7 @@
     </sql>
 
     <!-- 게시글 저장 -->
-    <insert id="save" parameterType="com.study.domain.post.PostRequest">
+    <insert id="save" parameterType="com.study.domain.post.PostRequest" useGeneratedKeys="true" keyProperty="id">
         insert into tb_post (
             <include refid="postColumns" />
         ) values (
@@ -62,7 +62,7 @@
     <update id="deleteById" parameterType="Long">
         update tb_post
         set
-            delete_yn = 1;
+            delete_yn = 1
         where id = #{id}
     </update>
 

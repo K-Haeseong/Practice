@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성 페이지</title>
+</head>
+<body>
+    <h1>연습용 프로젝트</h1>
+    
+    <form id="saveForm" method="post" autocomplete="off">
+        <table border="3">
+            <tbody>
+                <tr>
+                    <th>공지</th>
+                    <input type="hidden" id="noticeYn" name="noticeYn">    
+                    <td><input type="checkbox" id="isNotice" name="isNotice" /></td>
+                    <th>등록일</th>    
+                    <td colspan="3"><input type="text" name="createdDate" readonly></td>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <td colspan="3"><input type="text" name="title" maxlength="50" placeholder="제목을 입력해주세요."></td>
+                </tr>
+                <tr>
+                    <th>작성자</th>    
+                  <td colspan="3"><input type="text" name="writer" maxlength="10" placeholder="작성자을 입력해주세요."></td>
+                </tr>
+                <tr>
+                    <th>내용</th>    
+                  <td colspan="3"><textarea name="content" cols="50" rows="10" placeholder="내용을 입력해주세요."></textarea></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" id="saveBtn" onclick="savePost()">저장</button>
+        <a th:href="@{/post/list}">뒤로</a>
+    </form>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+       
+        function savePost() {
+
+            const form = document.getElementById("saveForm");
+            document.getElementById("saveBtn").disabled = true;
+            form.noticeYn.value = form.isNotice.checked;
+            form.action = [[${post == null}]] ? "/post/save" : "/post/update";
+            form.submit();
+        }
+
+        /* ]] */
+    </script>
+</body>
+</html>
