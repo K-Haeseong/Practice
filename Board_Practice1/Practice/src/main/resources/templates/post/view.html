@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>게시글 작성 페이지</title>
+    </head>
+
+    <body>
+        <div>
+            <h1>게시글 상세 조회</h1>
+        </div>
+        
+        <table border="3">
+            <tbody>
+                <tr>
+                    <th>공지</th>
+                    <td th:text="${post.noticeYn == false ? '일반' : '공지'}"></td>
+
+                    <th>등록일</th>    
+                    <td colspan="3" th:text="${#temporals.format(post.createdDate, 'YYYY-MM-DD hh:mm')}">등록일</td>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <td colspan="3" th:text="${post.title}">제목</th:text=></td>
+                </tr>
+                <tr>
+                    <th>작성자</th>    
+                    <td colspan="3" th:text="${post.writer}">작성자</td>
+                </tr>
+                <tr>
+                    <th>내용</th>    
+                    <td colspan="3" th:text="${post.content}">내용</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="btn">
+            <a th:href="@{/post/write(id=${post.id})}">수정</a>
+            <button type="button" onclick="deletePost()">삭제</button>
+            <a th:href="@{/post/list}">뒤로</a>
+        </p>
+
+        <!-- 수정/삭제 구현하기 -->
+
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+           
+
+            /* ]] */
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+    </body>
+</html>

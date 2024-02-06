@@ -1,10 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>게시글 리스트 페이지</title>
-</head>
-<body>
-  <h1>아직 아무것도 없지롱</h1>
-</body>
+  <head>
+      <meta charset="UTF-8">
+      <title>게시글 리스트 페이지</title>
+  </head>
+  <body>
+    <div class="content">
+      <div>
+        <h1>게시판 리스트</h1>
+      </div>
+
+      <table border="3" class="tb board_tb" style="text-align: center;">
+        <colgroup>
+          <col style="width:70px" /><col style="width:300px" /><col style="width:100px" /><col style="width:150px" /><col style="width:70px" />
+        </colgroup>
+        <thead>
+          <th scope="col">번호</th>
+          <th scope="col">제목</th>
+          <th scope="col">작성자</th>
+          <th scope="col">등록일</th>
+          <th scope="col">조회</th>
+        </thead>
+
+        <tbody>
+          <!-- posts가 비어있지 않을 때 -->
+          <tr th:if="${ not #lists.isEmpty(posts)}" th:each="post, status : ${posts}">
+            <td th:text="${post.noticeYn == false ? (status.size - status.index) : '공지'}">번호 or 공지</td>
+            <td><a th:href="@{/post/view(id=${post.id})}" th:text="${post.title}">제목</a></td>
+            <td th:text="${post.writer}">작성자</td>
+            <td th:text="${#temporals.format(post.createdDate, 'YYYY-MM-DD hh:mm')}">등록일</td>
+            <td th:text="${post.viewCnt}">조회수</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      <a th:href="@{/post/write}">글쓰기</a>
+    </p>
+
+  </body>
 </html>
