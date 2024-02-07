@@ -12,11 +12,14 @@
         </div>
         
         <form id="saveForm" method="post" autocomplete="off">
+            <!-- 수정일 때, 서버로 전달할 id 값 여부 담는 값 -->
+            <input type="hidden" id="id" name="id" th:if="${post != null}" th:value="${post.id}" />
+            <!-- 공지글 여부 담는 값 -->
+            <input type="hidden" id="noticeYn" name="noticeYn" />    
             <table border="3">
                 <tbody>
                     <tr>
                         <th>공지</th>
-                        <input type="hidden" id="noticeYn" name="noticeYn">    
                         <td><input type="checkbox" id="isNotice" name="isNotice" /></td>
                         <th>등록일</th>    
                         <td colspan="3"><input type="text" id="createdDate" name="createdDate" readonly></td>
@@ -45,8 +48,37 @@
             /*<![CDATA[*/
 
             window.onload = () => {
-                initCreatedDate();
+            
+                renderPostInfo(); 
+            
             }
+            
+            function renderPostInfo() {
+
+                const post = [[${post}]];
+                
+                if(post == null) {
+                    initCreatedDate();
+                    return false;
+                }
+
+                const form = document.getElementById("saveForm");
+               
+                const fields = ["id", "title", "writer", "content"];
+
+                const value = post.noticeYn;
+                console.log("value : ", value);
+
+                form.isNotice.checked = post.noticeYn;
+                form.createdDate.value = dayjs(post.createdDate).format("YYYY-MM-DD HH:mm");
+
+                fields.forEach(field => {
+                    form[field].value = post[field];
+                })
+            }
+
+
+
 
             function initCreatedDate() {
                 document.getElementById("createdDate").value = dayjs().format("YYYY-MM-DD");
@@ -54,9 +86,6 @@
             }
 
             function savePost() {
-
-
-
                 const form = document.getElementById("saveForm");
                 document.getElementById("saveBtn").disabled = true;
                 form.noticeYn.value = form.isNotice.checked;

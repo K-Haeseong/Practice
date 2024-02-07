@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.swing.*;
 import java.util.List;
 
 @Controller
@@ -19,8 +19,8 @@ public class PostController {
     @GetMapping("/post/write")
     public String openPostWrite(@RequestParam(value = "id", required = false) Long id, Model model) {
         if(id != null) {
-            PostResponse params = postService.findPostById(id);
-            model.addAttribute("params", params);
+            PostResponse post = postService.findPostById(id);
+            model.addAttribute("post", post);
         }
         return "post/write";
     }
@@ -29,6 +29,14 @@ public class PostController {
     public String savePost(PostRequest params) {
         postService.savePost(params);
         return "redirect:/post/list";
+    }
+
+    @PostMapping("/post/update")
+    public String updatePost(PostRequest params) {
+        postService.updatePost(params);
+        // @PathVariable 사용하기 전, 임시방편
+        Long id = params.getId();
+        return "redirect:/post/view" +"?id=" + id;
     }
 
     @GetMapping("/post/list")
@@ -43,6 +51,12 @@ public class PostController {
         PostResponse post = postService.findPostById(id);
         model.addAttribute("post", post);
         return "post/view";
+    }
+
+    @PostMapping("/post/delete")
+    public String deletePost(Long id) {
+        postService.deletePostById(id);
+        return "redirect:/post/list";
     }
 
 }
