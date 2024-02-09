@@ -68,7 +68,7 @@
 
 
     <!-- 게시글 목록 조회 -->
-    <select id="findAll" resultType="com.study.domain.post.PostResponse">
+    <select id="findAll" parameterType="com.study.common.dto.SearchDto" resultType="com.study.domain.post.PostResponse">
         select
             <include refid="postColumns" />
         from
@@ -76,9 +76,19 @@
         where
             delete_yn = 0
         order by
-            id desc;
+            id desc
+        limit
+            #{offset}, #{recordSize};
     </select>
 
     <!-- 게시글 수 조회 -->
+    <select id="count" parameterType="com.study.common.dto.SearchDto" resultType="int">
+        select
+            count(*)
+        from
+            tb_post
+        where
+            delete_yn = 0;
+    </select>
 
 </mapper>
