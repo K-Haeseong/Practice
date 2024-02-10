@@ -13,7 +13,7 @@ class PostServiceTest {
 
     @Test
     void saveByForeach() {
-        for (int i =1; i<=100; i++) {
+        for (int i =1; i<=1000; i++) {
             PostRequest params = new PostRequest();
             params.setTitle( i + "번 게시글");
             params.setContent( i + "번 게시글 내용");
