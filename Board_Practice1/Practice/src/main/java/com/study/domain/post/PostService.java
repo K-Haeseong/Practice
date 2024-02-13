@@ -2,6 +2,8 @@ package com.study.domain.post;
 
 
 import com.study.common.dto.SearchDto;
+import com.study.common.paging.Pagination;
+import com.study.common.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,12 +43,21 @@ public class PostService {
     }
 
     /* 게시글 목록 조회 */
-    public List<PostResponse> findAllPost(SearchDto params) {
-        return postMapper.findAll(params);
+    public PagingResponse<PostResponse> findAllPost(SearchDto params) {
+
+        int count = postMapper.count(params);
+
+        // Pagination 객체를 생성 후 페이지 정보 계산, SearchDto타입 객체에 pagination 저장
+        Pagination pagination = new Pagination(count, params);
+        params.setPagination(pagination);
+
+        // 저장된 페이지 정보 활용하여 리스트 목록 조회
+        List<PostResponse> list = postMapper.findAll(params);
+        return new PagingResponse<>(list, pagination);
+
+
+
     }
-
-    /* 게시글 수 조회 */
-
 
 
 }

@@ -24,7 +24,7 @@ public interface PostMapper {
     List<PostResponse> findAll(SearchDto params);
 
     /* 게시글 수 조회 */
-    int count();
+    int count(SearchDto params);
 
 
 }

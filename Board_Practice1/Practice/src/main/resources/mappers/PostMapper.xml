@@ -16,6 +16,7 @@
         , modified_date
     </sql>
 
+
     <!-- 게시글 저장 -->
     <insert id="save" parameterType="com.study.domain.post.PostRequest" useGeneratedKeys="true" keyProperty="id">
         insert into tb_post (
@@ -32,6 +33,7 @@
             , null
         )
     </insert>
+
 
     <!-- 게시글 상세 정보 조회 -->
     <select id="findById" parameterType="Long" resultType="com.study.domain.post.PostResponse">
@@ -78,8 +80,9 @@
         order by
             id desc
         limit
-            #{offset}, #{recordSize};
+            #{pagination.limitStart}, #{recordSize};
     </select>
+
 
     <!-- 게시글 수 조회 -->
     <select id="count" parameterType="com.study.common.dto.SearchDto" resultType="int">

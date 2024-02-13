@@ -1,18 +1,19 @@
 package com.study.common.paging;
 
+
 import com.study.common.dto.SearchDto;
 import lombok.Getter;
 
 @Getter
 public class Pagination {
 
-    private int totalRecordCount;     // 전체 데이터 수
-    private int totalPageCount;       // 전체 페이지 수
-    private int startPage;            // 첫 페이지 번호
-    private int endPage;              // 끝 페이지 번호
-    private int limitStart;           // LIMIT 시작 위치
-    private boolean existPrevPage;    // 이전 페이지 존재 여부
-    private boolean existNextPage;    // 다음 페이지 존재 여부
+    private int totalRecordCount; // 총 게시글 수
+    private int totalPageCount;// 총 페이지 수
+    private int startPage;// 첫 페이지 번호(목록 내)
+    private int endPage;// 끝 페이지 번호(목록 내)
+    private boolean existPrevPage;// 이전페이지(다음 목록의 끝 페이지로)
+    private boolean existNextPage;// 다음페이지(다음 목록의 첫 페이지로)
+    private int limitStart;// Limit 시작 위치(offset)
 
     public Pagination(int totalRecordCount, SearchDto params) {
         if (totalRecordCount > 0) {
@@ -23,33 +24,27 @@ public class Pagination {
 
     private void calculation(SearchDto params) {
 
-        // 전체 페이지 수
-        totalPageCount = ((totalRecordCount - 1) / params.getRecordSize()) + 1;
+        // 총 페이지 수 계산
+        int restPageList = totalRecordCount % params.getRecordSize();
+        totalPageCount = restPageList == 0 ? restPageList : restPageList + 1;
 
-        // 현재 페이지 번호가 전체 페이지 수보다 클 때, 현재 페이지 번호 전체 페이지 수로 저장
-        if (params.getPage() > totalPageCount) {
-            params.setPage(totalPageCount);
-        }
+        // 첫 페이지 번호 계산
+        startPage = (params.getPage() - 1 / params.getPageSize()) * params.getPageSize() + 1;
 
-        // 첫 페이지 번호
-        startPage = ((params.getPage() - 1) / params.getPageSize()) * params.getPageSize() + 1;
-
-        // 끝 페이지 번호
+        // 끝 페이지 번호 계산
         endPage = startPage + params.getPageSize() - 1;
 
-        // 끝 페이지가 전체 페이지 수보다 큰 경우, 끝 페이지 전체 페이지 수 저장
-        if (endPage > totalPageCount) {
+        if(endPage > totalPageCount) {
             endPage = totalPageCount;
         }
 
-        // LIMIT 시작 위치
+        // 이전 페이지 계산
+        existPrevPage = startPage!=1;
+
+        // 다음 페이지 계산
+        existNextPage = endPage!=totalPageCount;
+
+        // Limit 시작 위치 계산 - offset 계산
         limitStart = (params.getPage() - 1) * params.getRecordSize();
-
-        // 이전 페이지 존재 여부
-        existPrevPage = startPage != 1;
-
-        // 다음 페이지 존재 여부
-        existNextPage = (endPage * params.getRecordSize()) < totalRecordCount;
     }
-
 }

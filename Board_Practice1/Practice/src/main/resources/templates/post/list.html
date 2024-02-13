@@ -15,6 +15,11 @@
           width: 400px;
         }
 
+        .tb board_tb {
+          border: 3;
+          text-align: center;
+        }
+
 
       </style>    
 
@@ -25,6 +30,7 @@
         <h1>게시판 리스트</h1>
       </div>
 
+      <!-- 검색 -->
       <div class="searchBox">
         <form id="searchForm" onsubmit="return false;" autocomplete="off">
           <select name="searchType" >
@@ -37,8 +43,9 @@
           <button type="button"><sapn>검색</sapn></button>
         </form>
       </div>
-
-      <table border="3" class="tb board_tb" style="text-align: center;">
+      
+      <!-- 리스트 -->
+      <table class="tb board_tb">
         <colgroup>
           <col style="width:70px" /><col style="width:300px" /><col style="width:100px" /><col style="width:150px" /><col style="width:70px" />
         </colgroup>
@@ -52,12 +59,18 @@
 
         <tbody>
           <!-- posts가 비어있지 않을 때 -->
-          <tr th:if="${ not #lists.isEmpty(posts)}" th:each="post, status : ${posts}">
+          <tr th:if="${ not #lists.isEmpty( posts )}" th:each="post, status : ${posts}">
             <td th:text="${post.noticeYn == false ? (status.size - status.index) : '공지'}">번호 or 공지</td>
             <td><a th:href="@{/post/view(id=${post.id})}" th:text="${post.title}">제목</a></td>
             <td th:text="${post.writer}">작성자</td>
             <td th:text="${#temporals.format(post.createdDate, 'YYYY-MM-DD hh:mm')}">등록일</td>
             <td th:text="${post.viewCnt}">조회수</td>
+          </tr>
+
+          <tr th:unless="${not #lists.isEmpty( posts )}">
+            <td colspan="5">
+                <div class="no_data_msg">검색된 결과가 없습니다.</div>
+            </td>
           </tr>
         </tbody>
       </table>
