@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -47,6 +48,11 @@ public class PostService {
 
         int count = postMapper.count(params);
 
+        // 결과물이 아무것도 없을 경우
+        if (count < 1) {
+            return new PagingResponse<>(Collections.emptyList(), null);
+        }
+
         // Pagination 객체를 생성 후 페이지 정보 계산, SearchDto타입 객체에 pagination 저장
         Pagination pagination = new Pagination(count, params);
         params.setPagination(pagination);
@@ -54,9 +60,6 @@ public class PostService {
         // 저장된 페이지 정보 활용하여 리스트 목록 조회
         List<PostResponse> list = postMapper.findAll(params);
         return new PagingResponse<>(list, pagination);
-
-
-
     }
 
 
