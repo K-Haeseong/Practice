@@ -110,8 +110,30 @@
       /* <![CDATA[ */
 
       window.onload = () => {
+
+        setQueryStringParams();
+
         findAllPost();
+
       }
+
+
+      function setQueryStringParams() {
+
+        if (!location.search) {
+          return false;
+        }
+
+        const form = document.getElementById("searchForm");
+
+        new URLSearchParams(location.search).forEach((value, key) => {
+          if (form[key]) {
+                form[key].value = value;
+            }
+        }) 
+      }
+
+
 
       function findAllPost() {
 
