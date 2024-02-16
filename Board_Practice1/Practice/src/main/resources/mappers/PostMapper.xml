@@ -42,7 +42,7 @@
         from 
             tb_post
         where 
-            id = #{id};
+            id = #{id}
     </select>
 
     
@@ -69,6 +69,41 @@
     </update>
 
 
+    <!-- 게시글 검색 -->
+    <sql id="search">
+        <!-- 키워드가 존재 할 때 -->
+        <if test="keyword != null and keyword !='' ">
+            <choose>
+                <!-- 검색유형이 존재 할 때 -->
+                <when test="searchType != null and searchType !=''" >
+                    <choose>
+                        <when test="'title'.equals( searchType )">
+                            and title like concat('%', #{keyword},'%')
+                        </when>
+                        <when test="'content'.equals( searchType )">
+                            and content like concat('%', #{keyword},'%')
+                        </when>
+                        <when test="'writer'.equals( searchType )">
+                            and writer like concat('%', #{keyword}, '%')
+                        </when>
+                    </choose>
+                </when>
+
+                <!-- 전첵검색(검색유형 X) 일 때 -->
+                <otherwise>
+                    and (
+                            title like concat('%', #{keyword},'%')
+                                or
+                            content like concat('%', #{keyword},'%')
+                                or
+                            writer like concat('%', #{keyword}, '%')
+                         )
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
+
+
     <!-- 게시글 목록 조회 -->
     <select id="findAll" parameterType="com.study.common.dto.SearchDto" resultType="com.study.domain.post.PostResponse">
         select
@@ -77,6 +112,7 @@
             tb_post
         where
             delete_yn = 0
+            <include refid="search" />
         order by
             id desc
         limit
@@ -91,7 +127,8 @@
         from
             tb_post
         where
-            delete_yn = 0;
+            delete_yn = 0
+            <include refid="search" />
     </select>
 
 </mapper>
