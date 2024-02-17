@@ -6,7 +6,7 @@
 </head>
 <body>
     <form th:if="${not #maps.isEmpty(params.data)}" id="redirectForm" th:action="${params.redirectUri}" th:method="${params.method}">
-        <input th:each="key, status : ${params.data.keySet()}"  th:name="${key}" th:value="${params.data.get(key)}" />
+        <input type="hidden" th:each="key, status : ${params.data.keySet()}"  th:name="${key}" th:value="${params.data.get(key)}" />
     </form>
 
     <script th:inline="javascript">
@@ -16,8 +16,6 @@
             
             const message = [[${params.message}]];
 
-            console.log("message : ", message);
- 
             if(message) {
                 alert(message);
             }

@@ -13,7 +13,7 @@
         
         <form id="saveForm" method="post" autocomplete="off">
             <!-- 수정일 때, 서버로 전달할 id 값 여부 담는 값 -->
-            <input type="hidden" id="id" name="id" th:if="${post != null}" th:value="${post.id}" />
+            <!-- <input type="hidden" id="id" name="id" th:if="${post != null}" th:value="${post.id}" /> -->
             <!-- 공지글 여부 담는 값 -->
             <input type="hidden" id="noticeYn" name="noticeYn" />    
             <table border="3">
@@ -40,7 +40,7 @@
             </table>
 
             <button type="button" id="saveBtn" onclick="savePost()">저장</button>
-            <a th:href="@{/post/list}">뒤로</a>
+            <button type="button" id="listBtn" onclick="goListPage()">목록</button>
         </form>
 
 
@@ -78,9 +78,8 @@
             }
 
 
-
-
             function initCreatedDate() {
+
                 document.getElementById("createdDate").value = dayjs().format("YYYY-MM-DD");
 
             }
@@ -89,9 +88,33 @@
                 const form = document.getElementById("saveForm");
                 document.getElementById("saveBtn").disabled = true;
                 form.noticeYn.value = form.isNotice.checked;
+
+                /* 수정중 */
+                new URLSearchParams(location.search).forEach((value, key) => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = value;
+                    form.append(input);
+                })
+
+                // 1. 저장 후 list로 갔을 때 키워드 검색/키워드 유지 되도록 하기
+                // 2. 저장 시 view로 이동 이동 시 쿼리스트링 유지 거기서 목록 누르면 다시 또 유지
+
                 form.action = [[${post == null}]] ? "/post/save" : "/post/update";
                 form.submit();
             }
+
+
+            function goListPage() {
+
+                const queryString = new URLSearchParams(location.search);
+                queryString.delete("id");
+
+                location.href = "/post/list" + "?" + queryString.toString();
+            }
+
+            
 
             /* ]] */
         </script>

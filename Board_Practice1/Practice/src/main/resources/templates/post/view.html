@@ -36,15 +36,23 @@
         </table>
 
         <p class="btn">
-            <a th:href="@{/post/write(id=${post.id})}">수정</a>
-            <button type="button" onclick="deletePost()">삭제</button>
-            <a th:href="@{/post/list}">목록으로</a>
+            <button type="button" onclick="goWritePage();">수정</button>
+            <button type="button" onclick="deletePost();">삭제</button>
+            <button type="button" onclick="goListPage();">목록</button>
         </p>
 
-    
+
 
         <script th:inline="javascript">
             /*<![CDATA[*/
+
+            function goWritePage() {
+
+                location.href = "/post/write" + location.search;
+
+            }
+
+
 
            function deletePost() {
                 const id = [[${post.id}]];
@@ -58,18 +66,42 @@
                     return false;
                 }
 
+                let inputHtml = '';
+
+                new URLSearchParams(location.search).forEach((value, key) => {
+                    inputHtml += 
+                    `
+                    <input type="hidden" name="${key}" value="${value}"/>
+                    `;    
+                })
+
+
                 const formHtml = 
                 `
                 <form id="deleteForm" action="/post/delete" method="post">
-                    <input type="hidden" name="id" value="${id}"/>    
+                    ${inputHtml}
                 </form>
                 `
 
                 const doc = new DOMParser().parseFromString(formHtml, 'text/html');
                 const form = doc.body.firstChild;
+                // 위 부분이 필요한 이유
+                //  :   document.body.append() 메서드는 문서(document) 객체를 직접 추가할 수 없다. 
+                //      문서 객체는 #document 타입이며, 문서의 최상위 노드이기 때문에 BODY 엘리먼트 안에 직접 추가될 수 없다.
+                //      해결 방법은 doc.body.firstChild를 사용하여 폼(form) 엘리먼트를 추출한 다음, 그것을 body에 추가하는 방식을 사용할 수 있다. 
                 document.body.append(form);
                 document.getElementById("deleteForm").submit();
            }
+
+
+
+           function goListPage() {
+
+                const queryString = new URLSearchParams(location.search);
+                queryString.delete("id");
+
+                location.href = "/post/list" + "?" + queryString.toString();
+            }
 
             /* ]] */
         </script>
