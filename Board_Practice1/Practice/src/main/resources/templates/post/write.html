@@ -89,7 +89,7 @@
                 document.getElementById("saveBtn").disabled = true;
                 form.noticeYn.value = form.isNotice.checked;
 
-                /* 수정중 */
+                /* 수정 시 이전 페이지 정보 넘기기 */
                 new URLSearchParams(location.search).forEach((value, key) => {
                     const input = document.createElement('input');
                     input.type = 'hidden';

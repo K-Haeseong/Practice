@@ -16,7 +16,6 @@
                 <tr>
                     <th>공지</th>
                     <td th:text="${post.noticeYn == false ? '일반' : '공지'}"></td>
-
                     <th>등록일</th>    
                     <td colspan="3" th:text="${#temporals.format(post.createdDate, 'YYYY-MM-DD hh:mm')}">등록일</td>
                 </tr>
@@ -82,7 +81,6 @@
                     ${inputHtml}
                 </form>
                 `
-
                 const doc = new DOMParser().parseFromString(formHtml, 'text/html');
                 const form = doc.body.firstChild;
                 // 위 부분이 필요한 이유

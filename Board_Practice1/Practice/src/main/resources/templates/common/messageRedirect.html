@@ -16,6 +16,10 @@
             
             const message = [[${params.message}]];
 
+            const redirectUri = [[${params.redirectUri}]];
+
+            console.log("redirectUri : ", redirectUri);
+
             if(message) {
                 alert(message);
             }
@@ -25,10 +29,7 @@
                 form.submit();
                 return false;
             }
-
-            const redirectUri = [[${params.redirectUri}]];
-            console.log("redirectUri : ", redirectUri);
-
+            
             location.href = redirectUri
         }
 

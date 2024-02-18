@@ -39,7 +39,8 @@ public class PostController {
                               @ModelAttribute("params") PostRequest params,
                               Model model) {
         postService.updatePost(params);
-        MessageDto message = new MessageDto("게시글이 수정 되었습니다.", "/post/list", RequestMethod.GET, queryParamsToMap(queryParams));
+        Long id = params.getId();
+        MessageDto message = new MessageDto("게시글이 수정 되었습니다.", "/post/view", RequestMethod.GET, queryParamsToMap(queryParams, id));
         return showMessageAndRedirect(message, model);
     }
 
@@ -52,8 +53,8 @@ public class PostController {
     }
 
     @GetMapping("/post/view")
-    public String openPostView( @ModelAttribute("params") SearchDto params,
-                                @RequestParam("id") Long id,
+    public String openPostView( @RequestParam("id") Long id,
+                                @ModelAttribute("params") SearchDto params,
                                 Model model) {
         PostResponse post = postService.findPostById(id);
         model.addAttribute("post", post);
@@ -65,12 +66,13 @@ public class PostController {
                               @RequestParam("id") Long id,
                               Model model) {
         postService.deletePostById(id);
-        MessageDto message = new MessageDto("게시글이 삭제 되었습니다.", "/post/list", RequestMethod.GET, queryParamsToMap(queryParams));
+        MessageDto message = new MessageDto("게시글이 삭제 되었습니다.", "/post/list", RequestMethod.GET, queryParamsToMap(queryParams, null));
         return showMessageAndRedirect(message, model);
     }
 
-    private Map<String, Object> queryParamsToMap(SearchDto queryParams) {
+    private Map<String, Object> queryParamsToMap(SearchDto queryParams, Long id) {
         Map<String, Object> data  = new HashMap<>();
+        data.put("id", id);
         data.put("page", queryParams.getPage());
         data.put("recordSize", queryParams.getRecordSize());
         data.put("pageSize", queryParams.getPageSize());
